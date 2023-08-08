@@ -1,8 +1,7 @@
 <!-- Project Logo -->
 <p align="center">
-  <img src="https://photos.app.goo.gl/cQY6djpubwmb1pTo8" width="300" alt="Project Logo">
+  <img src="https://i.imgur.com/atyZnap.jpg" width="300" alt="Project Logo">
 </p>
-
 # SSL Certificate Installer
 
 This script automates the process of setting up an SSL certificate on your server using Certbot. It prompts you to choose between Apache and Nginx as your web server and then configures the SSL certificate accordingly.
