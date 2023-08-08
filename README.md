@@ -8,12 +8,8 @@ This script automates the process of setting up an SSL certificate on your serve
 
 ```bash
 git clone https://github.com/brian404/ssl-cert-installer.git
-
-
 cd ssl-cert-installer
-
 chmod +x setup_ssl.sh
-
 ./setup_ssl.sh
 
 #Follow the prompts to select your web server (Apache or Nginx) and let the script handle the SSL certificate setup.
