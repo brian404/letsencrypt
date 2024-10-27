@@ -3,19 +3,13 @@
   <img src="https://i.imgur.com/atyZnap.jpg" width="300" alt="Project Logo">
 </p>
 # SSL Certificate Installer
+Let’s Encrypt is a script for automated SSL certificate management using Certbot. Easily obtain, renew, and manage SSL/TLS certificates for your web server.
 
-This script automates the process of setting up an SSL certificate on your server using Certbot. It prompts you to choose between Apache and Nginx as your web server and then configures the SSL certificate accordingly.
-
-### Instructions
-
-1. Clone this repository to your server:
+## Installation 
+1. Run the script
 
 ```bash
-git clone https://github.com/brian404/ssl-cert-installer.git
-cd ssl-cert-installer
-chmod +x setup_ssl.sh
-./setup_ssl.sh
-
-#Follow the prompts to select your web server (Apache or Nginx) and let the script handle the SSL certificate setup.
-
+wget -q https://raw.githubusercontent.com/brian404/letsencrypt/master/certbot.sh
+chmod +x certbot.sh
+./certbot.sh
 
