@@ -1,13 +1,19 @@
+
 #!/bin/bash
 
 set -e
 
 log_file="/var/log/certbot_setup.log"
 light_green="\e[1;32m"
+light_red="\e[1;31m"
 reset="\e[0m"
 
 log() {
     echo -e "$(date +"%Y-%m-%d %H:%M:%S") - ${light_green}[+]${reset} $1" | tee -a "$log_file"
+}
+
+error() {
+    echo -e "$(date +"%Y-%m-%d %H:%M:%S") - ${light_red}[-]${reset} $1" | tee -a "$log_file"
 }
 
 sudo apt update
@@ -110,12 +116,15 @@ main_menu() {
                 install_snapd
                 install_certbot
 
-                read -p "Enter your email address for certificate renewal notifications: " email
+                while true; do
+                    read -p "Enter your email address for certificate renewal notifications: " email
 
-                if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
-                    log "Invalid email address format. Exiting."
-                    exit 1
-                fi
+                    if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
+                        error "Invalid email address format. Example: user@example.com"
+                    else
+                        break
+                    fi
+                done
 
                 echo -e "${light_green}[+]${reset} Select your web server:"
                 echo -e "${light_green}[+]${reset} 1. Apache"
