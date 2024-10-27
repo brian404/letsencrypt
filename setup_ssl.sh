@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 set -e
@@ -57,41 +56,9 @@ configure_web_server() {
             sudo systemctl restart nginx
             ;;
         3)
-            log "Advanced option selected. Please specify your web server type:"
-            echo -e "${light_green}[+]${reset} 1. Lighttpd"
-            echo -e "${light_green}[+]${reset} 2. Caddy"
-            echo -e "${light_green}[+]${reset} 3. HAProxy"
-            echo -e "${light_green}[+]${reset} 4. Custom Web Server"
-            read -p "Enter your choice (1-4): " advanced_choice
-
-            case $advanced_choice in
-                1)
-                    log "Running certbot for Lighttpd..."
-                    sudo certbot certonly --webroot -w /var/www/lighttpd -d yourdomain.com --agree-tos --non-interactive --email "$email"
-                    ;;
-                2)
-                    log "Running certbot for Caddy..."
-                    sudo certbot certonly --standalone -d yourdomain.com --agree-tos --non-interactive --email "$email"
-                    ;;
-                3)
-                    log "Running certbot for HAProxy..."
-                    sudo certbot certonly --standalone -d yourdomain.com --agree-tos --non-interactive --email "$email"
-                    ;;
-                4)
-                    log "For a custom web server, use the following instructions:"
-                    log "To manually obtain and install certificates for custom web servers:"
-                    log "1. Obtain a certificate using certbot in standalone or webroot mode:"
-                    log "   - Standalone: sudo certbot certonly --standalone -d yourdomain.com"
-                    log "   - Webroot: sudo certbot certonly --webroot -w /path/to/webroot -d yourdomain.com"
-                    log "2. Follow the documentation for your specific web server to configure SSL."
-                    log "Refer to the Certbot documentation for further guidance: https://certbot.eff.org/docs/"
-                    exit 0
-                    ;;
-                *)
-                    log "Invalid choice for advanced web server selection."
-                    exit 1
-                    ;;
-            esac
+            read -p "Enter your domain (e.g., example.com): " domain
+            log "Running certbot in standalone mode for domain $domain..."
+            sudo certbot certonly --standalone --preferred-challenges http -d "$domain" --agree-tos --non-interactive --email "$email"
             ;;
         *)
             log "Invalid choice."
@@ -100,10 +67,19 @@ configure_web_server() {
     esac
 }
 
+renew_certificates() {
+    log "Renewing certificates..."
+    sudo certbot renew --non-interactive --quiet
+    log "Certificates renewed successfully."
+}
+
 show_main_menu() {
     echo -e "${light_green}[+]${reset} Select an option:"
-    echo -e "${light_green}[+]${reset} 1. Install Certbot and Configure Web Server"
-    echo -e "${light_green}[+]${reset} 2. Exit"
+    echo -e "${light_green}[+]${reset} 1. Install Certbot and Configure Apache"
+    echo -e "${light_green}[+]${reset} 2. Install Certbot and Configure Nginx"
+    echo -e "${light_green}[+]${reset} 3. Use Certbot in Standalone Mode"
+    echo -e "${light_green}[+]${reset} 4. Renew Certificates"
+    echo -e "${light_green}[+]${reset} 5. Exit"
 }
 
 main_menu() {
@@ -112,7 +88,7 @@ main_menu() {
         read -p "Enter your choice: " main_choice
         
         case $main_choice in
-            1)
+            1|2|3)
                 install_snapd
                 install_certbot
 
@@ -126,17 +102,13 @@ main_menu() {
                     fi
                 done
 
-                echo -e "${light_green}[+]${reset} Select your web server:"
-                echo -e "${light_green}[+]${reset} 1. Apache"
-                echo -e "${light_green}[+]${reset} 2. Nginx"
-                echo -e "${light_green}[+]${reset} 3. Advanced (Custom Web Server)"
-                read -p "Enter your choice (1, 2, or 3): " choice
-
-                configure_web_server "$choice"
-
+                configure_web_server "$main_choice"
                 log "Certbot setup completed successfully."
                 ;;
-            2)
+            4)
+                renew_certificates
+                ;;
+            5)
                 log "Exiting."
                 exit 0
                 ;;
