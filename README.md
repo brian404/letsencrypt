@@ -2,7 +2,8 @@
 <p align="center">
   <img src="https://i.imgur.com/atyZnap.jpg" width="300" alt="Project Logo">
 </p>
-# SSL Certificate Installer
+## SSL Certificate Installer
+
 Let’s Encrypt is a script for automated SSL certificate management using Certbot. Easily obtain, renew, and manage SSL/TLS certificates for your web server.
 
 ## Installation 
